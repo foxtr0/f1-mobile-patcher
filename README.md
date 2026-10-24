@@ -31,18 +31,30 @@ It reads the APK, patches `lib/arm64-v8a/libil2cpp.so`, rebuilds the ZIP (keepin
 `resources.arsc` uncompressed and 4-byte aligned), signs it with APK Signature
 Scheme v2 and writes the result (~71 MB).
 
-## What the patch changes
+## What works
 
-Only `lib/arm64-v8a/libil2cpp.so`, 70 instruction edits:
+* **Boots fully offline** — no "network error" popup on startup; the game uses its
+built-in offline profile.
+* **Single races** — the `Duel` tile opens the offline race setup (track, race
+type, laps, difficulty) and `Race` starts a normal race against AI, with HUD,
+damage, and touch controls.
+* **Graphics options** — `Game Options → Preferences` has a **Graphics quality**
+row (removed from the new version), and the game is forced to its highest
+profile: native resolution, 60 FPS target, 2048 px shadow cascades.
 
-| Area | Effect |
-|---|---|
-| Offline mode | no network error at startup, built-in offline profile |
-| Main menu | `PLAY` opens the original hub (Events / Duel / Showdown / Career) |
-| Single race | the `Duel` tile opens the offline race setup (track / type / laps / difficulty) |
-| Race HUD | no freeze when opening the in-race settings menu |
-| Career | step / contract screens reachable, requisites cleared (signing itself needs the dead server) |
-| Graphics | `Game Options → Preferences` gains a **Graphics quality** row |
-| Quality | Q100 profile, native render resolution, 60 FPS target, 2048 px shadow cascades |
+## What does not work
+
+* **Career races** — signing a contract is a server (Nakama) request. The offer
+screen opens and *Sign a contract* is enabled, but tapping it does nothing, so
+no career weekend can be started. Career is browsing-only.
+* **End-of-race results** — finishing a race does not show a results/leaderboard
+screen. The single-race scene ships only a stub end panel, so you get the
+race→menu transition screen instead. `Continue` still takes you back to the menu.
+* **Everything online** — Events, Duel matchmaking, Showdown, Leagues, Shop /
+purchases, leaderboards, cloud save, live challenges: all dead. The servers are
+gone; this is not a server emulator.
+* **Old progress** — the offline profile is new. Career/level/currency from the
+live servers is gone.
+
 
 
