@@ -11,8 +11,7 @@ f1mobile_patcher.py      the whole tool (Python 3.8+, standard library only)
 * The original `com.codemasters.F1Mobile` **5.4.11** APK (versionCode `24001341`).
   The tool verifies the `libil2cpp.so` SHA-256 before touching anything and
   refuses to run on a different build.
-* Python 3 on a PC (Windows/macOS/Linux). No Java, no Android SDK, no adb is
-  needed to *produce* the patched APK.
+* Python 3 on a PC (Windows/macOS/Linux). 
 
 ## Usage
 
