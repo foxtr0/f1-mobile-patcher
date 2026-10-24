@@ -33,28 +33,27 @@ Scheme v2 and writes the result (~71 MB).
 
 ## What works
 
-* **Boots fully offline** — no "network error" popup on startup; the game uses its
+* **Boots fully offline** - no "network error" popup on startup; the game uses its
 built-in offline profile.
-* **Single races** — the `Duel` tile opens the offline race setup (track, race
+* **Single races** - the `Duel` tile opens the offline race setup (track, race
 type, laps, difficulty) and `Race` starts a normal race against AI, with HUD,
 damage, and touch controls.
-* **Graphics options** — `Game Options → Preferences` has a **Graphics quality**
+* **Graphics options**- `Game Options → Preferences` has a **Graphics quality**
 row (removed from the new version), and the game is forced to its highest
 profile: native resolution, 60 FPS target, 2048 px shadow cascades.
 
 ## What does not work
 
-* **Career races** — signing a contract is a server (Nakama) request. The offer
+* **Career races** - signing a contract is a server (Nakama) request. The offer
 screen opens and *Sign a contract* is enabled, but tapping it does nothing, so
 no career weekend can be started. Career is browsing-only.
-* **End-of-race results** — finishing a race does not show a results/leaderboard
+* **End-of-race results** - finishing a race does not show a results/leaderboard
 screen. The single-race scene ships only a stub end panel, so you get the
 race→menu transition screen instead. `Continue` still takes you back to the menu.
-* **Everything online** — Events, Duel matchmaking, Showdown, Leagues, Shop /
+* **Everything online** - Events, Duel matchmaking, Showdown, Leagues, Shop /
 purchases, leaderboards, cloud save, live challenges: all dead. The servers are
 gone; this is not a server emulator.
-* **Old progress** — the offline profile is new. Career/level/currency from the
-live servers is gone.
+
 
 
 
