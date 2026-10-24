@@ -1,35 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-F1 Mobile Racing 5.4.11 - offline patch builder (v40)
-
-Takes YOUR OWN original com.codemasters.F1Mobile 5.4.11 APK and produces a
-patched, re-signed APK that runs offline with:
-
-  * no network error on startup, offline profile
-  * PLAY -> original hub (Events / Duel / Showdown / Career)
-  * Duel tile -> offline single-race setup (track / race type / laps / difficulty)
-  * in-race settings menu no longer freezes the race
-  * Graphics quality row in Game Options -> Preferences
-  * maximum quality: Q100 profile, native render resolution, 60 FPS
-  * 2048px directional shadow cascades
-  * career step/contract screen reachable (signing itself needs the dead server)
-
-Only lib/arm64-v8a/libil2cpp.so is modified (70 instruction patches).
-Nothing from the original APK is redistributed: the input file is required.
-
-Usage
------
-    python f1mobile_patcher.py com.codemasters.F1Mobile_5.4.11.apk
-    python f1mobile_patcher.py <input.apk> -o <output.apk>
-
-Requires Python 3.8+ (standard library only - no Java, no Android SDK).
-
-The output is signed with an APK Signature Scheme v2 key embedded in this
-script, which is NOT EA's key, so the phone must not have the store version
-installed: uninstall it first (back up the OBB, see README.md).
-"""
-
 import sys, os, struct, zlib, hashlib, base64
 
 ORIGINAL_SHA256 = "90ae142fa1ed5e81946c8b5624552007f3d6770f404a51773eba4192639c9b82"
@@ -187,9 +155,9 @@ CERT_DER_B64 = (
     "zqn82L5EyKUVFDJq2HkALmUpIm7vaFRWxhHntzf8ePBxP7d2fF6xNGQcJ37PQBybCN6SDw=="
 )
 
-# ---------------------------------------------------------------------------
+
 # ASN.1 / RSA (pure Python, stdlib only)
-# ---------------------------------------------------------------------------
+
 
 def _der_len(n):
     if n < 0x80:
@@ -258,9 +226,7 @@ def rsa_sign_sha256(message, n, d):
     return pow(int.from_bytes(em, 'big'), d, n).to_bytes(k, 'big')
 
 
-# ---------------------------------------------------------------------------
 # APK Signature Scheme v2
-# ---------------------------------------------------------------------------
 
 SIG_ALG_RSA_PKCS1_SHA256 = 0x0103
 DIGEST_ALG_CHUNKED_SHA256 = 0x0101
@@ -325,9 +291,7 @@ def sign_v2(apk, n, e, d, cert_der):
     return apk[:cd_offset] + block + apk[cd_offset:cd_end] + bytes(eocd)
 
 
-# ---------------------------------------------------------------------------
 # ZIP writer (4-byte aligns stored entries, like zipalign)
-# ---------------------------------------------------------------------------
 
 def _dos_time(dt):
     y, mo, d, h, mi, s = dt
@@ -373,9 +337,8 @@ def write_zip(entries, out_path):
     return bytes(out)
 
 
-# ---------------------------------------------------------------------------
 # main
-# ---------------------------------------------------------------------------
+
 
 def patch_library(lib):
     if hashlib.sha256(lib).hexdigest() != ORIGINAL_SHA256:
