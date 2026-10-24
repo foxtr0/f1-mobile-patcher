@@ -1,10 +1,8 @@
 # F1 Mobile Racing 5.4.11 - offline patcher
 
-A single-file Python program that turns **someone's own original 5.4.11 APK** into
+A single-file Python program that turns **your own original 5.4.11 APK** into
 the offline-patched build. 
-```
-f1mobile_patcher.py      the whole tool (Python 3.8+, standard library only)
-```
+
 
 ## What it needs
 
