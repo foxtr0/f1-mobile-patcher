@@ -54,6 +54,55 @@ race→menu transition screen instead. `Continue` still takes you back to the me
 purchases, leaderboards, cloud save, live challenges: all dead. The servers are
 gone; this is not a server emulator.
 
+## How it works
+
+### 1. Static reconnaissance
+
+Unpack the APK and the OBB, confirm it is an IL2CPP Unity build (a 72 MB
+`libil2cpp.so` plus `global-metadata.dat`), then run **Il2CppDumper** to get
+`dump.cs` (every type, field, method with its RVA) and `script.json` (RVA → method
+name). The string table (`string_literals.json`) is used to locate the code
+around user-visible text, e.g. the network-error dialog or the quality labels.
+
+### 2. Dynamic evidence from a real device
+
+Every symptom was reproduced on the phone with `adb`, and the *logcat stack trace*
+was treated as ground truth. A trace like
+
+```
+NullReferenceException
+  at Eden.F1.Race.AutoDrivingHandler.StopPlayerToAutomaticDriving(IRaceMode)
+  at IRaceMode.OnGameResumed  <- PauseManager.ResumeGame()
+```
+
+names the failing method directly, which is far cheaper than reading 31 MB of
+`dump.cs`. Screenshots and repeated taps were used to confirm what the game was
+actually doing (frozen clock, missing panel, wrong screen) before touching code.
+
+### 3. Localisation
+
+Method name → RVA from `script.json` → file offset (identity below `0x3faf5e8`)
+→ disassemble that range with **Capstone** → read the actual logic (which field
+is tested, which branch raises the error, which call returns null). Only after
+the control flow was understood was a patch chosen.
+
+### 4. Patch selection
+
+A small menu of tactics, always preferring the least invasive:
+
+| Tactic | When |
+|---|---|
+| force a predicate (getter / inline flag) | the code already has an offline/quality branch, it just tests the wrong value |
+| stub with `ret` | the method is an online-only side effect that throws or blocks |
+| retarget a branch | a null check raises where it should return, or the wrong UI path is taken |
+| code cave (`b` + custom sequence) | the fix needs more than one instruction, e.g. calling a different API |
+
+### 5. Verification
+
+Every patch is applied to a **pristine copy**, with the original instruction
+disassembled and asserted first; the finished library must match a pinned
+SHA-256 or the build aborts. That makes the process reproducible and tells you
+immediately when a different game version is fed in.
 
 
 
