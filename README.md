@@ -35,9 +35,6 @@ built-in offline profile.
 * **Single races** - the `Duel` tile opens the offline race setup (track, race
 type, laps, difficulty) and `Race` starts a normal race against AI, with HUD,
 damage, and touch controls.
-* **Graphics options**- `Game Options → Preferences` has a **Graphics quality**
-row (removed from the new version), and the game is forced to its highest
-profile: native resolution, 60 FPS target, 2048 px shadow cascades.
 
 * **Career races** - They mostly work, with some crashes. It needs heavy testing and debugging still.
   
